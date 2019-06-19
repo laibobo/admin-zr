@@ -1,0 +1,25 @@
+// babel-loader 配置
+{
+    "env":{
+        "development": {
+            "plugins": ["dynamic-import-node"]
+          }
+    },
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "modules": false
+            }
+        ]
+    ],
+    "plugins": [
+        "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-transform-runtime", [
+            "transform-remove-console",
+            {
+                "include": ["error", "warn"]
+            }
+        ]
+    ]
+}
