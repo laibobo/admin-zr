@@ -6,7 +6,7 @@ Vue.use(Router)
 import Layout from '../views/layout/index'
 import sysManageRouter from '../router/modules/sys-manage'
 
-const constantRoutes = [{
+export const constantRoutes = [{
     path: '/login',
     name: 'Login',
     component: () =>

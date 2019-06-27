@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
+import store from '~/store'
 import { getToken } from './auth'
 
 const service = axios.create({
@@ -38,9 +38,8 @@ service.interceptors.response.use(response => {
             })
         }
         return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-        return res
     }
+    return res
 }, error => {
     console.log(`err:${error}`)
     Message({

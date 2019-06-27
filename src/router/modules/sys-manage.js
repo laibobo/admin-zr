@@ -9,7 +9,7 @@ const config = [{
     redirect: '/sysmanage/user',
     meta: {
         title: '系统管理',
-        icon: ''
+        icon: 'dizhi'
     },
     children: [{
         path: 'user',
@@ -17,7 +17,7 @@ const config = [{
         component: User,
         meta: {
             title: '用户管理',
-            icon: ''
+            icon: 'dizhi1'
         }
     }, {
         path: 'role',
@@ -25,7 +25,7 @@ const config = [{
         component: Role,
         meta: {
             title: '角色管理',
-            icon: ''
+            icon: 'accessory'
         }
     }]
 }]

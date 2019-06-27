@@ -22,6 +22,9 @@ import {
 
 export default {
     "name": 'SvgIcon',
+    data(){
+        return {}
+    },
     "props": {
         "iconClass": {
             "type": String,

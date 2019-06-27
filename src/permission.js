@@ -13,28 +13,26 @@ router.beforeEach(async(to, from, next) => {
     NProgress.start()
     document.title = to.meta.title
     const hasToken = getToken()
-
     if (hasToken) {
         if (to.path === '/login') {
-            next({ path: '/' })
+            next({ path: '/sysmanage' })
             NProgress.done()
         } else {
-            const hasRoles = store.getters.roles && store.getters.roles.length > 0
-            if (hasRoles) {
-                next()
-            } else {
+            const hasPermissionIdents = store.getters.permissionIdents && store.getters.permissionIdents.length > 0
+            if (!hasPermissionIdents) {
                 try {
-                    const { roles } = await store.dispatch('user/getInfo')
-                    const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
+                    const { permissionIdents } = await store.dispatch('getInfo')
+                    const accessRoutes = await store.dispatch('generateRoutes', permissionIdents)
                     router.addRoutes(accessRoutes)
                     next({...to, replace: true })
                 } catch (error) {
-                    await store.dispatch('user/resetToken')
+                    await store.dispatch('resetToken')
                     Message.error(error || 'has error')
                     next(`/login?redirect=${to.path}`)
                     NProgress.done()
                 }
+            } else {
+                next()
             }
         }
     } else {

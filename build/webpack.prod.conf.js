@@ -49,6 +49,9 @@ module.exports = smp.wrap(WebPackMerge(WebPackBaseConfig, {
         ]
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'css/[name]_[contenthash].css'
+        }),
         new PurifyCSSPlugin({
             paths: Glob.sync([
                 path.join(__dirname, '../src/')

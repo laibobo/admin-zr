@@ -1,13 +1,13 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { asyncRoutes, constantRoutes } from '~/router'
 
 /**
- * 角色确定当前用户是否具有权限
- * @param roles
+ * 确定当前用户是否具有权限
+ * @param permissionIdents
  * @param route
  */
-function hasPermission(roles, route) {
-    if (route.meta && route.meta.roles) {
-        return roles.some(role => route.meta.roles.includes(role))
+function hasPermission(permissionIdents, route) {
+    if (route.name) {
+        return permissionIdents.some(identName => route.name === identName)
     }
     return true
 }
@@ -15,21 +15,19 @@ function hasPermission(roles, route) {
 /**
  * 递归过滤异步路由表
  * @param routes asyncRoutes
- * @param roles
+ * @param permissionIdents
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, permissionIdents) {
     const res = []
-
     routes.forEach(route => {
-        const tmp = {...route }
-        if (hasPermission(roles, tmp)) {
+        const tmp = Array.isArray(route) ? route[0] : route
+        if (hasPermission(permissionIdents, tmp)) {
             if (tmp.children) {
-                tmp.children = filterAsyncRoutes(tmp.children, roles)
+                tmp.children = filterAsyncRoutes(tmp.children, permissionIdents)
             }
             res.push(tmp)
         }
     })
-
     return res
 }
 
@@ -46,14 +44,9 @@ const mutations = {
 }
 
 const actions = {
-    generateRoutes({ commit }, roles) {
+    generateRoutes({ commit }, permissionIdents) {
         return new Promise(resolve => {
-            let accessedRoutes
-            if (roles.includes('admin')) {
-                accessedRoutes = asyncRoutes || []
-            } else {
-                accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-            }
+            let accessedRoutes = filterAsyncRoutes(asyncRoutes, permissionIdents)
             commit('SET_ROUTES', accessedRoutes)
             resolve(accessedRoutes)
         })
@@ -61,7 +54,7 @@ const actions = {
 }
 
 export default {
-    namespaced: true,
+    // namespaced: true,
     state,
     mutations,
     actions

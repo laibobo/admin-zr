@@ -15,11 +15,6 @@
     ],
     "plugins": [
         "@babel/plugin-syntax-dynamic-import",
-        "@babel/plugin-transform-runtime", [
-            "transform-remove-console",
-            {
-                "include": ["error", "warn"]
-            }
-        ]
+        "@babel/plugin-transform-runtime"
     ]
 }

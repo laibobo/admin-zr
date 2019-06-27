@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import router from '~/router'
 import Element from 'element-ui'
+import store from './store'
 
 import '~/assets/styles/reset.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import '~/assets/icons/iconfont.js'
-import '~/permission'
+import '~/permission.js'
 
 import IconSvg from '~/components/icon-svg'
 
@@ -19,5 +20,6 @@ Vue.config.productionTip = false
 
 new Vue({
     el: '#app',
-    router
+    router,
+    store
 })

@@ -6,36 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
-let pluginsConfig = [
-    new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-        title: 'index',
-        template: path.join(__dirname, '../src/index.html')
-    }),
-    new webpack.DefinePlugin({
-        'process.env': {
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        }
-    })
-]
-if (!isDev) {
-    pluginsConfig = pluginsConfig.concat(new MiniCssExtractPlugin({
-        filename: 'css/[name]_[contenthash].css'
-    }))
-}
-/*
-  {
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                enforce: 'pre',
-                include: [path.resolve(__dirname, '../src')],
-                exclude: '/node_modules/',
-                options: {
-                    formatter: require('eslint-friendly-formatter'),
-                    fix: true
-                }
-            },
-*/
 module.exports = {
     mode: process.env.NODE_ENV || 'production',
     entry: path.join(__dirname, '../src/index.js'),
@@ -103,7 +73,18 @@ module.exports = {
             }
         ]
     },
-    plugins: pluginsConfig,
+    plugins: [
+        new VueLoaderPlugin(),
+        new HtmlWebpackPlugin({
+            title: 'index',
+            template: path.join(__dirname, '../src/index.html')
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+            }
+        })
+    ],
     resolve: {
         extensions: ['.vue', '.js', '.css', '.sass'],
         alias: {
