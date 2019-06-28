@@ -33,13 +33,14 @@
         </span>
         <breadcrumb />
         <div class="right-info">
-          <el-dropdown>
+          <el-dropdown  @command="handleCommandHeaderRight">
             <span class="el-dropdown-link">
               <i class="el-icon-setting" />王小虎
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
               <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -155,8 +156,27 @@ export default {
       }
       return path
     },
-    variables() {
-      return variables
+    // variables() {
+    //   return variables
+    // }
+  },
+  methods:{
+    handleCommandHeaderRight(command){
+      if(command === 'logout'){
+        this.logout()
+      }
+    },
+    logout(){
+       this.$store.dispatch('logout').then(()=> {
+         this.$router.push({ path: '/login'})
+       }).catch(err=>{
+         this.$notify({
+           title:'退出系统失败！',
+           message: err,
+           type: 'error',
+           duration: 0
+         })
+       })
     }
   }
 }

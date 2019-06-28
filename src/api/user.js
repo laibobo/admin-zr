@@ -31,8 +31,9 @@ export function getInfo(token) {
 }
 
 export function logout() {
-    return request({
-        url: '/user/logout',
-        method: 'post'
-    })
+    return Promise.resolve('成功')
+        // return request({
+        //     url: '/user/logout',
+        //     method: 'post'
+        // })
 }

@@ -1,19 +1,29 @@
 <template>
   <div class="login">
     <article class="login-panel">
-      <el-form ref="login-form" :model="loginForm" label-width="80px;">
-        <el-form-item label="用户名">
+      <el-form ref="login-form"
+        status-icon
+        label-width="80px;"
+        :model="loginForm"
+        :rules="rules"
+        :hide-required-asterisk="true">
+        <el-form-item
+          label="用户名"
+          prop="username">
           <el-input
             v-model.trim="loginForm.username"
             placeholder="请输入用户名"
-            required
+            autocomplete="off"
           />
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item
+          label="密码"
+          prop="password">
           <el-input
             v-model.trim="loginForm.password"
             type="password"
             placeholder="请输入密码"
+            autocomplete="off"
           />
         </el-form-item>
         <el-form-item>
@@ -39,7 +49,7 @@
       background: #fff;
       right: 300px;
       padding: 20px;
-      bottom: 100px;
+      bottom: 220px;
       box-sizing: border-box;
       box-shadow: 2px 1px 5px #565366;
       border-radius: 5px;
@@ -56,31 +66,38 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名地址', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
         ]
       }
     }
   },
   methods: {
     submitForm(formName) {
-      this.$store.dispatch('userLogin',this.loginForm).then(() => {
-        console.log('pass')
-        this.$router.push({ path: '/sysmanage/user' })
-      }).catch(err => {
-        console.log('nopass')
-        // this.$message.error(err)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$store.dispatch('userLogin',this.loginForm).then(() => {
+            this.$notify({
+              title: '登录成功',
+              message: '正在跳转页面...',
+              type: 'success',
+              duration: 1500,
+              onClose:()=>{
+                this.$router.push({ path: '/sysmanage/user' })
+              }
+            })
+          }).catch(err => {
+            this.$notify({
+              title:'登录失败',
+              message: err,
+              type: 'error',
+              duration: 0
+            })
+          })
+        }
       })
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-         
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
     }
   }
 }
