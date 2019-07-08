@@ -19,6 +19,7 @@
         "element-ui": "^2.8.2",
         "file-saver": "^2.0.2",
         "js-cookie": "^2.2.0",
+        "mockjs": "^1.0.1-beta3",
         "nprogress": "^0.2.0",
         "pdfjs-dist": "^2.0.943",
         "vue": "^2.6.10",

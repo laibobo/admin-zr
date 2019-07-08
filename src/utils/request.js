@@ -4,7 +4,7 @@ import store from '~/store'
 import { getToken } from './auth'
 
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API, // api的base_url 读取config配置文件
+    baseURL: require(`config/${process.env.NODE_ENV}.env.js`).BASE_API,
     timeout: 5000
 })
 
@@ -20,6 +20,7 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(response => {
     const res = response.data
+    console.log(res.code)
     if (res.code !== 20000) {
         Message({
             message: res.data,

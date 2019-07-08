@@ -9,9 +9,13 @@ module.exports = WebPackMerge(WebPackBaseConfig, {
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
-        port: 8099,
+        port: 2019,
         host: '0.0.0.0',
-        hot: true
+        hot: true,
+        overlay: {
+            warnings: false,
+            errors: true
+        }
     },
     plugins: [
         new CleanWebpackPlugin(),

@@ -5,9 +5,7 @@ Vue.use(Vuex)
 
 const getters = {
     token: state => state.user.token,
-    avatar: state => state.user.avatar,
     name: state => state.user.name,
-    introduction: state => state.user.introduction,
     roles: state => state.user.roles,
     permissionIdents: state => state.user.permissionIdents,
     permission_routes: state => state.permission.routes,

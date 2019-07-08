@@ -35,7 +35,7 @@
         <div class="right-info">
           <el-dropdown  @command="handleCommandHeaderRight">
             <span class="el-dropdown-link">
-              <i class="el-icon-setting" />王小虎
+              <i class="el-icon-setting" /> {{ userName }}
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
@@ -141,8 +141,12 @@ export default {
   components: { Breadcrumb,MenuItem },
   data() {
     return {
-      isCollapse:false
+      isCollapse:false,
+      userName: ''
     }
+  },
+  created(){
+    this.userName = this.$store.getters.name
   },
   computed: {
     ...mapGetters([
@@ -155,10 +159,7 @@ export default {
         return meta.activeMenu
       }
       return path
-    },
-    // variables() {
-    //   return variables
-    // }
+    }
   },
   methods:{
     handleCommandHeaderRight(command){

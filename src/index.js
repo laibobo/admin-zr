@@ -10,6 +10,8 @@ import '~/permission.js'
 
 import IconSvg from '~/components/icon-svg'
 
+import '../mock/index'
+
 Vue.component('icon-svg', IconSvg)
 const req = require.context('~/assets/icons/svg', false, /\.svg$/)
 const requireAll = requireContext => requireContext.keys().map(requireContext)

@@ -57,6 +57,7 @@
   }
 </style>
 <script>
+import { login } from '~/api/user'
 export default {
   data() {
     return {
@@ -73,6 +74,8 @@ export default {
         ]
       }
     }
+  },
+  created(){
   },
   methods: {
     submitForm(formName) {

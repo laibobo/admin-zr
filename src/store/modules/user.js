@@ -5,8 +5,6 @@ import { login, logout, getInfo } from '~/api/user'
 const state = {
     token: getToken(),
     name: '',
-    avater: '',
-    introduction: '',
     roles: [],
     permissionIdents: []
 }
@@ -15,14 +13,8 @@ const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
-        state.introduction = introduction
-    },
     SET_NAME: (state, name) => {
         state.name = name
-    },
-    SET_AVATER: (state, avater) => {
-        state.avater = avater
     },
     SET_ROLES: (state, roles) => {
         state.roles = roles
@@ -36,9 +28,8 @@ const actions = {
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
             login({ username: username, password: password }).then(response => {
-                const { data } = response
-                commit('SET_TOKEN', data.token)
-                setToken(data.token)
+                commit('SET_TOKEN', response.token)
+                setToken(response.token)
                 resolve()
             }).catch(error => {
                 reject(error)
@@ -48,20 +39,18 @@ const actions = {
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
-                const { data } = response
-
-                if (!data) {
+                if (!response) {
                     reject('验证失败，请重新登录')
                 }
-                const { roles, name, avater, introduction, permissionIdents } = data
+                const { data } = response
+                const { roles, name, permissionIdents } = data
+
                 if (!roles || roles.length <= 0) {
                     reject('获取用户信息: 角色必须是非空数组')
                 }
 
                 commit('SET_ROLES', roles)
                 commit('SET_NAME', name)
-                commit('SET_AVATER', avater)
-                commit('SET_INTRODUCTION', introduction)
                 commit('SET_PERMISSONIDENTS', permissionIdents)
                 resolve(data)
             }).catch(error => {
