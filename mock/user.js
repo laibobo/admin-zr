@@ -1,3 +1,6 @@
+import config from 'config/index'
+import Mock from 'mockjs'
+
 const info = {
     url: '/user/info',
     type: 'get',
@@ -41,8 +44,28 @@ const logout = {
         }
     }
 }
+const userList = {
+    url: '/user/getUserList',
+    type: 'get',
+    response: _ => {
+        return {
+            "data": {
+                "list|1-10": [{
+                    "id|+1": 1,
+                    "userName": "@cname",
+                    "sex|1": ["男", "女"],
+                    "age|18-60": 20,
+                    "portrait": Mock.Random.image('50x50'),
+                    "enabled|1": ["启用", '禁用']
+                }]
+            },
+            "code": config.responseCode
+        }
+    }
+}
 export default [
     info,
     login,
-    logout
+    logout,
+    userList
 ]
