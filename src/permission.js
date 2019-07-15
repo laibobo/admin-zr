@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { getToken } from '~/utils/auth'
+import { getToken, setPageBtns, getPageBtns } from '~/utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
@@ -12,6 +12,7 @@ const whiteList = ['/login']
 router.beforeEach(async(to, from, next) => {
     NProgress.start()
     document.title = to.meta.title
+    const pageCode = to.name
     const hasToken = getToken()
     if (hasToken) {
         if (to.path === '/login') {
@@ -22,6 +23,7 @@ router.beforeEach(async(to, from, next) => {
             if (!hasPermissionIdents) {
                 try {
                     const { permissionIdents } = await store.dispatch('getInfo')
+
                     const accessRoutes = await store.dispatch('generateRoutes', permissionIdents)
                     router.addRoutes(accessRoutes)
                     next({...to, replace: true })
@@ -34,6 +36,13 @@ router.beforeEach(async(to, from, next) => {
             } else {
                 next()
             }
+
+            JSON.stringify(store.getters.permissionIdents, (k, v) => {
+                if (v && v.pageBtns && pageCode == v.pageCode) {
+                    setPageBtns(v.pageBtns)
+                }
+                return v
+            })
         }
     } else {
         if (whiteList.indexOf(to.path) !== -1) {

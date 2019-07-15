@@ -4,8 +4,8 @@ import Mock from 'mockjs'
 const info = {
     url: '/user/info',
     type: 'get',
-    response: config => {
-        const { token } = config.query
+    response: ({ query }) => {
+        const { token } = query
         if (token !== 'test_token') {
             return {
                 code: 50008,
@@ -19,7 +19,7 @@ const info = {
                 name: 'admin',
                 avater: 'bobo',
                 introduction: '',
-                permissionIdents: ['User', 'SysManage', 'Role']
+                permissionIdents: [{ pageCode: 'User', pageBtns: ['add', 'look'] }, { pageCode: 'SysManage' }, { pageCode: 'Role', pageBtns: ['add'] }]
             }
         }
     }
@@ -50,14 +50,15 @@ const userList = {
     response: _ => {
         return {
             "data": {
-                "list|1-10": [{
+                "list|10": [{
                     "id|+1": 1,
                     "userName": "@cname",
                     "sex|1": ["男", "女"],
                     "age|18-60": 20,
-                    "portrait": Mock.Random.image('50x50'),
+                    "portrait": Mock.Random.image('25x25'),
                     "enabled|1": ["启用", '禁用']
-                }]
+                }],
+                "total": 10
             },
             "code": config.responseCode
         }

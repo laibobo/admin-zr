@@ -9,14 +9,18 @@ import '~/assets/icons/iconfont.js'
 import '~/permission.js'
 
 import IconSvg from '~/components/icon-svg'
+import Pagination from '~/components/pagination'
 
 import '../mock/index'
+import vueXlsxTable from 'vue-xlsx-table'
+Vue.use(vueXlsxTable, { rABS: false })
 
 Vue.component('icon-svg', IconSvg)
 const req = require.context('~/assets/icons/svg', false, /\.svg$/)
 const requireAll = requireContext => requireContext.keys().map(requireContext)
 requireAll(req)
 
+Vue.component('Pagination', Pagination)
 Vue.use(Element)
 Vue.config.productionTip = false
 

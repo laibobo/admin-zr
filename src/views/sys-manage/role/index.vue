@@ -48,6 +48,7 @@
     <el-button @click="resetForm('ruleForm')">重置</el-button>
   </el-form-item>
 </el-form>
+<vue-xlsx-table @on-select-file="handleSelectedFile"></vue-xlsx-table>
   </div>
 </template>
 <style lang="sass" scoped>
@@ -94,6 +95,9 @@ export default {
       };
     },
     methods: {
+      handleSelectedFile(c){
+        console.log(c)
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

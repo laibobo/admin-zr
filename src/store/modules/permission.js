@@ -7,7 +7,7 @@ import { asyncRoutes, constantRoutes } from '~/router'
  */
 function hasPermission(permissionIdents, route) {
     if (route.name) {
-        return permissionIdents.some(identName => route.name === identName)
+        return permissionIdents.some(item => route.name === item.pageCode)
     }
     return true
 }

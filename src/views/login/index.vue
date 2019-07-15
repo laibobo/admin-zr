@@ -77,6 +77,10 @@ export default {
   },
   created(){
   },
+  beforeRouteEnter(to,from,next){
+    console.log('beforeRouteEnter')
+    next()
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

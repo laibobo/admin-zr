@@ -77,7 +77,8 @@ module.exports = {
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
             title: 'index',
-            template: path.join(__dirname, '../src/index.html')
+            template: path.join(__dirname, '../src/index.html'),
+            favicon: path.join(__dirname, '../favicon.ico')
         }),
         new webpack.DefinePlugin({
             'process.env': {
