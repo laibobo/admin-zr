@@ -46,11 +46,30 @@
         </div>
       </el-header>
       <el-main>
-        <router-view />
+        <transition name="fade-transform" mode="out-in">
+            <router-view />
+        </transition>
       </el-main>
     </el-container>
   </el-container>
 </template>
+<style>
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+    transition: all .5s;
+}
+
+.fade-transform-enter {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+</style>
+
 <style lang="sass" scoped>
     .frame-col {
         position: absolute;
@@ -139,7 +158,7 @@ import Breadcrumb from '~/components/breadcrumb'
 import MenuItem from './components/sidebar/menu-item.vue'
 export default {
   components: { Breadcrumb,MenuItem },
-  data() {
+    data() {
     return {
       isCollapse:false,
       userName: ''
