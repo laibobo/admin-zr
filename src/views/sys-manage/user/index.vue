@@ -77,7 +77,7 @@
 </style>
 <script>
 import '~/assets/icons/svg/file.svg'
-import { getUserList } from '~/api/user'
+import { getUserList,testUser } from '~/api/user'
 import { getPageBtns } from '~/utils/auth'
 
 export default {
@@ -99,8 +99,12 @@ export default {
   },
   created(){
     this.getUserList()
+    this.testUser()
   },
   methods:{
+    async testUser(){
+      const d = await testUser({id:1})
+    },
     async getUserList(){
       const { data } = await getUserList(this.queryForm)
       this.tableData = data.list

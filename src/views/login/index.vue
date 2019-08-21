@@ -57,7 +57,7 @@
   }
 </style>
 <script>
-import { login } from '~/api/user'
+import { login,testUser } from '~/api/user'
 export default {
   data() {
     return {
@@ -76,12 +76,16 @@ export default {
     }
   },
   created(){
+    this.testUser()
   },
   beforeRouteEnter(to,from,next){
     console.log('beforeRouteEnter')
     next()
   },
   methods: {
+    async testUser(){
+      const d = await testUser({id:1})
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

@@ -28,3 +28,10 @@ export function getUserList() {
         method: 'get'
     })
 }
+export function testUser(params){
+    return request({
+        url:'/SysUser/GetById',
+        method:'get',
+        params
+    })
+}
