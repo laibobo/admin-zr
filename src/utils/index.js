@@ -1,3 +1,5 @@
+import { reject } from "q";
+
 /**
  * @param {string} url
  * @returns {Object}
@@ -16,4 +18,15 @@ export function param2Obj(url) {
         .replace(/\+/g, ' ') +
         '"}'
     )
+}
+/**
+ * @param {number} seconds
+ * @returns {Promise}
+*/
+export function delayTime(seconds = 1.5){
+    return new Promise((resolve)=>{
+        setTimeout(()=>{
+            resolve()
+        },seconds * 1000)
+    })
 }

@@ -11,6 +11,7 @@ const service = axios.create({
 service.interceptors.request.use(config=> {
     if (store.getters.token) {
         config.headers['X-Token'] = getToken()
+        //config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     }
     return config
 }, error => {

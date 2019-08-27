@@ -5,51 +5,47 @@
     <section class="filter-container">
         <el-input
           class="w-lg"
-          v-model="queryForm.userName"
-          placeholder="用户名" clearable></el-input>
-        <el-select v-model="queryForm.sex" placeholder="性别" clearable>
-          <el-option label="男" value="男"></el-option>
-          <el-option label="女" value="女"></el-option>
+          v-model="handleQueryForm.userName"
+          placeholder="用户名" 
+          clearable></el-input>
+        <el-select v-model="handleQueryForm.userStatus" placeholder="状态" clearable>
+          <el-option label="启用" :value="true"></el-option>
+          <el-option label="禁用" :value="false"></el-option>
         </el-select>
-        <el-select v-model="queryForm.status" placeholder="状态" clearable>
-          <el-option label="启用" value="启用"></el-option>
-          <el-option label="禁用" value="禁用"></el-option>
-        </el-select>
-        <el-button plain type="primary" @click="query">查询</el-button>
+        <el-button type="primary" @click="handleQuery">查询</el-button>
         <el-button plain type="primary" v-show="getBtnAuth.indexOf('add') > -1">新增</el-button>
     </section>
     <el-table
       :data="tableData"
       :default-sort = "{prop: 'age', order: 'enabled'}"
+      v-loading="loading"
       style="width:100%;">
+      <el-table-column
+        label="序号"
+        type="index"
+        width="100"
+        >
+        </el-table-column>
       <el-table-column
         label="用户名"
         sortable
-        prop="userName" />
-      <el-table-column
-        label="年龄"
-        sortable
-        prop="age" />
-      <el-table-column
-        label="性别"
-        sortable
-        prop="sex" />
+        prop="UserName" />
       <el-table-column
         label="头像"
-        prop="portrait">
+        prop="Photo">
         <template slot-scope="scope">
           <el-image
             style="width:25;heigh:25px;"
             fit="cover"
-            :src="scope.row.portrait"></el-image>
+            :src="scope.row.Photo" v-if="scope.row.Photo"></el-image>
         </template>
       </el-table-column>
       <el-table-column
         label="状态"
         sortable
-        prop="enabled">
+        prop="Status">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.enabled === '启用'? 'success':'danger'">{{ scope.row.enabled }}</el-tag>
+          <el-tag :type="scope.row.Status ? 'success':'danger'">{{ scope.row.Status?'启用':'禁用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -57,16 +53,16 @@
         label="操作"
         width="100">
         <template slot-scope="scope">
-          <el-button v-show="getBtnAuth.indexOf('look') > -1" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button v-show="getBtnAuth.indexOf('look') > -1" @click="handleUpdateUserStatus(scope.row)" type="text" size="small">{{ scope.row.Status?'禁用':'启用' }}</el-button>
           <el-button v-show="getBtnAuth.indexOf('edit') > -1" type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination
       :config="{
-      'currentPage':queryForm.currentPage,
-      'pageSize':queryForm.pageSize,
-      'total':queryForm.total,
+      'currentPage':handleQueryForm.current,
+      'pageSize':handleQueryForm.size,
+      'total':total,
       'currentPageChanged':handleCurrentPageChanged,
       'pageSizeChanged':handlePageSizeChanged}">
     </pagination>
@@ -77,19 +73,22 @@
 </style>
 <script>
 import '~/assets/icons/svg/file.svg'
-import { getUserList,testUser } from '~/api/user'
+import { getUserList,testUser,updateUserStatus } from '~/api/user'
 import { getPageBtns } from '~/utils/auth'
+import { delayTime } from '~/utils/index'
 
 export default {
   data(){
     return {
+      loading:true,
       tableData:[],
-      queryForm:{
+      handleQueryForm:{
         userName:'',
-        currentPage:1,
-        pageSize:10,
-        total:0
-      }
+        userStatus:null,
+        current:1,
+        size:10
+      },
+      total:0
     }
   },
   computed:{
@@ -99,27 +98,76 @@ export default {
   },
   created(){
     this.getUserList()
-    this.testUser()
+  },
+  mounted(){
+    console.log(this)
   },
   methods:{
-    async testUser(){
-      const d = await testUser({id:1})
-    },
     async getUserList(){
-      const { data } = await getUserList(this.queryForm)
-      this.tableData = data.list
-      this.queryForm.total = data.total
+      this.loading = true
+      try {
+        const resp = await getUserList(this.handleQueryForm)
+        // this.$alert('提示大城大事的',{
+        //   type:'warning',
+        //   showClose:false,
+        //   center:true,
+        //   customClass:'b-alerts'
+        // })
+        delayTime().then(_=>{
+          this.loading = false           
+          if(resp.status === 1){
+            this.tableData = resp.data.rows
+            this.total = resp.data.total
+            console.log(this.tableData)
+          }else{
+
+          }
+        })
+      } catch (error) {
+        console.error('请求异常：'+ error)
+      }
     },
-    query(){
-      this.currentPage = 1
+    async updateUserStatus(params){
+      const loading = this.$loading({
+          lock: true,
+          text: '处理中，请稍等',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const p = {
+        Id:params.Id,
+        Status:!params.Status
+      }
+      try {
+        const reps = await updateUserStatus(p)
+        loading.close()
+        if(reps.status === 1){
+          alert(reps.msg)
+        }else{
+          alert(reps.msg)
+        }
+      } catch (error) {
+        loading.close()
+        console.log('修改用户状态接口异常：',error)
+      }
+    },
+    handleQuery(current = 1){
+      this.current = current
       this.getUserList()
     },
-    handleCurrentPageChanged(){
-      this.query()
+    handleUpdateUserStatus(params){
+      const txt = params.Status ? '禁用' : '启用'
+      this.$confirm(`确认${txt}吗？`)
+          .then(_ => {
+            this.updateUserStatus(params)
+          }).catch(_ => {})
+    },
+    handleCurrentPageChanged(current){
+      this.handleQuery(current)
     },
     handlePageSizeChanged(ps){
-      this.pageSize = ps
-      this.query()
+      this.size = ps
+      this.handleQuery()
     }
   }
 }

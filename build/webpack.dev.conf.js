@@ -15,7 +15,7 @@ module.exports = WebPackMerge(WebPackBaseConfig, {
         hot: true,
         proxy:{
             '*': {
-                target: 'http://192.168.1.103:2020',
+                target: 'http://localhost:2020',
                 changeOrigin: true
             }
         },

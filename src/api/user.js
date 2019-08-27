@@ -22,15 +22,23 @@ export function logout() {
         method: 'post'
     })
 }
-export function getUserList() {
+export function getUserList(data) {
     return request({
-        url: '/user/getUserList',
-        method: 'get'
+        url: '/SysUser/getPagedList',
+        method: 'post',
+        data
+    })
+}
+export function updateUserStatus(data){
+    return request({
+        url:'/SysUser/UpdateUserStatus',
+        method:'post',
+        data
     })
 }
 export function testUser(params){
     return request({
-        url:'/SysUser/GetById',
+        url:'/SysUser/FindById',
         method:'get',
         params
     })
