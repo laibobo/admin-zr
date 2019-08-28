@@ -27,9 +27,10 @@ Vue.component('Pagination', Pagination)
 Vue.use(Element)
 Vue.config.productionTip = false
 
+Vue.mixin(mymixin)
+
 new Vue({
     el: '#app',
-    mixins:[mymixin],
     router,
     store
 })

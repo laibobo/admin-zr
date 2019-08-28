@@ -77,6 +77,7 @@ export default {
   },
   created(){
     this.testUser()
+    this.$alerts('你好登录')
   },
   beforeRouteEnter(to,from,next){
     console.log('beforeRouteEnter')
