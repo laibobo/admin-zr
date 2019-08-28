@@ -5,7 +5,7 @@ import store from './store'
 
 import '~/assets/styles/reset.css'
 import 'element-ui/lib/theme-chalk/index.css'
-import '~/assets/styles/index.scss'
+import '~/assets/styles/alerts.scss'
 import '~/assets/icons/iconfont.js'
 import '~/permission.js'
 

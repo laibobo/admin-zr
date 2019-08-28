@@ -1,5 +1,7 @@
 import request from '~/utils/request'
-
+/**
+ * 用户登录
+ */
 export function login(data) {
     return request({
         url: '/user/login',
@@ -7,7 +9,9 @@ export function login(data) {
         data
     })
 }
-
+/**
+ * 获取用户权限相关信息
+ */
 export function getInfo(token) {
     return request({
         url: '/user/info',
@@ -15,13 +19,18 @@ export function getInfo(token) {
         params: { token }
     })
 }
-
+/**
+ * 用户退出登录
+ */
 export function logout() {
     return request({
         url: '/user/logout',
         method: 'post'
     })
 }
+/**
+ * 根据条件获取用户数据集合
+ */
 export function getUserList(data) {
     return request({
         url: '/SysUser/getPagedList',
@@ -29,6 +38,9 @@ export function getUserList(data) {
         data
     })
 }
+/**
+ * 修改用户状态
+ */
 export function updateUserStatus(data){
     return request({
         url:'/SysUser/UpdateUserStatus',
@@ -36,10 +48,43 @@ export function updateUserStatus(data){
         data
     })
 }
-export function testUser(params){
+/**
+ * 获取用户信息
+ */
+export function getUserInfo(params){
     return request({
         url:'/SysUser/FindById',
         method:'get',
         params
+    })
+}
+/**
+ * 删除用户
+ */
+export function deleteUser(data){
+    return request({
+        url:'/SysUser/Delete',
+        method:'post',
+        data
+    })
+}
+/**
+ * 添加用户信息
+ */
+export function addUser(data){
+    return request({
+        url:'/SysUser/Add',
+        method:'post',
+        data
+    })
+}
+/**
+ * 修改用户信息
+ */
+export function updateUser(data){
+    return request({
+        url:'/SysUser/Update',
+        method:'put',
+        data
     })
 }

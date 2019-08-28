@@ -40,4 +40,7 @@ a:hover { text-decoration:underline;}
 /*
  * created by zxl
 */
-html, body {min-width: 1280px;}
+html, body {min-width: 1280px;height: 100%;}
+.btn-group{
+    width: auto !important;
+}

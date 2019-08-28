@@ -37,8 +37,6 @@
   </div>
 </template>
 <style lang="scss" scoped>
-  @import '~/assets/styles/alerts.scss';
-
   .login{
     background: rgb(169, 202, 193);
     height: 100%;
@@ -59,7 +57,7 @@
   }
 </style>
 <script>
-import { login,testUser } from '~/api/user'
+import { login } from '~/api/user'
 export default {
   data() {
     return {
@@ -77,18 +75,11 @@ export default {
       }
     }
   },
-  created(){
-    this.testUser()
-    this.$alerts('你好登录')
-  },
   beforeRouteEnter(to,from,next){
     console.log('beforeRouteEnter')
     next()
   },
   methods: {
-    async testUser(){
-      const d = await testUser({id:1})
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

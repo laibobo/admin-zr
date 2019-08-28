@@ -1,13 +1,24 @@
 export default {
    methods: {
-        $alerts(msg, options) {
-            let opt = Object.assign({
-                type: 'warning',
+        $alerts(msg, options,type = 'warning') {
+            const opts = Object.assign({
                 showClose: false,
                 customClass: 'b-alerts',
                 center: true
-            }, options)
-            this.$alert(msg, opt)
-        }
+            }, options, {type})
+            this.$alert(msg, opts)
+        },
+        $alertError(msg,options){
+            this.$alerts(msg,options,'error')
+        },
+        $alertSuccess(msg,options){
+            this.$alerts(msg,options,'success')
+        },
+        $alertWarning(msg,options){
+            this.$alerts(msg,options)
+        },
+        $alertInfo(msg,options){
+            this.$alerts(msg,options,'info')
+        },
     }
 }
