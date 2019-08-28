@@ -5,14 +5,14 @@ import store from './store'
 
 import '~/assets/styles/reset.css'
 import 'element-ui/lib/theme-chalk/index.css'
-import '~/assets/styles/alerts.sass'
+import '~/assets/styles/index.scss'
 import '~/assets/icons/iconfont.js'
 import '~/permission.js'
 
 import IconSvg from '~/components/icon-svg'
 import Pagination from '~/components/pagination'
 
-import mymixin from '~/components/mixins/alerts.js'
+import alerts from '~/components/mixins/alerts.js'
 
 import '../mock/index'
 import vueXlsxTable from 'vue-xlsx-table'
@@ -27,7 +27,7 @@ Vue.component('Pagination', Pagination)
 Vue.use(Element)
 Vue.config.productionTip = false
 
-Vue.mixin(mymixin)
+Vue.mixin(alerts)
 
 new Vue({
     el: '#app',

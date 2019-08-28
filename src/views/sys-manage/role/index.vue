@@ -51,7 +51,7 @@
 <vue-xlsx-table @on-select-file="handleSelectedFile"></vue-xlsx-table>
   </div>
 </template>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 
 </style>
 <script>

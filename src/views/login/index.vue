@@ -36,7 +36,9 @@
     </article>
   </div>
 </template>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/alerts.scss';
+
   .login{
     background: rgb(169, 202, 193);
     height: 100%;

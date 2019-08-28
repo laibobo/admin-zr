@@ -11,7 +11,7 @@
     </el-pagination>
   </div>
 </template>
-<style lang="sass"  scoped>
+<style lang="scss"  scoped>
   .pagination-container{
     display: flex;
     flex-direction: row;

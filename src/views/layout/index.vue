@@ -70,7 +70,7 @@
 }
 </style>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
     .frame-col {
         position: absolute;
         width: 100%;

@@ -6,7 +6,7 @@
         <el-input
           class="w-lg"
           v-model="handleQueryForm.userName"
-          placeholder="用户名" 
+          placeholder="用户名"
           clearable></el-input>
         <el-select v-model="handleQueryForm.userStatus" placeholder="状态" clearable>
           <el-option label="启用" :value="true"></el-option>
@@ -68,7 +68,7 @@
     </pagination>
   </div>
 </template>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 
 </style>
 <script>
@@ -114,7 +114,7 @@ export default {
         //   customClass:'b-alerts'
         // })
         delayTime().then(_=>{
-          this.loading = false           
+          this.loading = false
           if(resp.status === 1){
             this.tableData = resp.data.rows
             this.total = resp.data.total
