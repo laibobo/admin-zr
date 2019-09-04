@@ -20,5 +20,9 @@ export default {
         $alertInfo(msg,options){
             this.$alerts(msg,options,'info')
         },
+        //重置表单
+        resetForm(formName){
+            this.$refs[formName].resetFields()
+        }
     }
 }

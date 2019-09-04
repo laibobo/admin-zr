@@ -19,7 +19,7 @@ const info = {
                 name: 'admin',
                 avater: 'bobo',
                 introduction: '',
-                permissionIdents: [{ pageCode: 'User', pageBtns: ['add', 'look'] }, { pageCode: 'SysManage' }, { pageCode: 'Role', pageBtns: ['add'] }]
+                permissionIdents: [{ pageCode: 'User', pageBtns: ['add', 'look'] }, { pageCode: 'SysManage' }, { pageCode: 'Role', pageBtns: ['add'] },{pageCode:'Permissions'}]
             }
         }
     }

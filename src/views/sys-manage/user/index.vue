@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- <icon-svg icon-class="shichangbu" />
-    <icon-svg icon-class="file" /> -->
+    <!--用户管理-->
     <section class="filter-container">
       <el-row :gutter="10">
         <el-col :xs="10" :sm="6" :md="3">
@@ -19,7 +18,7 @@
         </el-col>
       </el-row>
     </section>
-    <el-table :data="tableData" :default-sort="{prop: 'age', order: 'enabled'}" v-loading="loading" style="width:100%;">
+    <el-table :data="tableData" :default-sort="{prop: 'Status', order: 'Status'}" v-loading="loading" style="width:100%;">
       <el-table-column label="序号" type="index" width="100">
       </el-table-column>
       <el-table-column label="用户名" sortable prop="UserName" />
@@ -35,7 +34,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button type="warning" size="mini">编辑</el-button>
+          <el-button type="warning" size="mini" @click="handleEditUser(scope.row)">编辑</el-button>
           <el-button
             type="primary"
             size="mini"
@@ -62,13 +61,13 @@
         ref="user-form"
         label-width="100px">
         <el-form-item label="用户名" prop="userName">
-          <el-input type="text" placeholder="请输入用户名" v-model="userForm.userName"></el-input>
+          <el-input type="text" placeholder="请输入用户名" v-model="userForm.userName" clearable></el-input>
         </el-form-item>
-        <el-form-item label="是否修改密码">
-          <el-switch v-model="userForm.isUpdatePwd"></el-switch>
+        <el-form-item label="是否修改密码" v-if="isUpdateOper">
+          <el-switch v-model="isUpdatePwd"></el-switch>
         </el-form-item>
-        <el-form-item label="新密码" prop="userPwd" v-if="userForm.isUpdatePwd">
-          <el-input type="text" placeholder="请输入新密码" v-model="userForm.userPwd"></el-input>
+        <el-form-item label="新密码" prop="userPwd" v-if="isUpdatePwd">
+          <el-input type="text" placeholder="请输入新密码" v-model="userForm.Pwd" clearable></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -86,7 +85,9 @@
   import {
     getUserList,
     updateUserStatus,
-    deleteUser
+    deleteUser,
+    addUser,
+    updateUser
   } from '~/api/user'
   import {
     getPageBtns
@@ -98,19 +99,21 @@
   export default {
     data() {
       return {
+        isUpdateOper:false,
+        isUpdatePwd:false,
         userDialogTitle:'',
         userFormRules:{
           userName:[
             { required:true,message:'请输入用户名',trigger:'blur' }
           ],
-          userPwd:[
+          Pwd:[
             { required:true,message:'请输入新密码',trigger:'blur' }
           ]
         },
         userForm:{
+          Id:null,
           userName:'',
-          userPwd:'',
-          isUpdatePwd:false
+          Pwd:''
         },
         userInfoDialog:false,
         loading: true,
@@ -198,17 +201,66 @@
           this.$alertWarning('删除用户接口异常！请联系平台管理人员')
         }
       },
+      //添加用户
+      async addUser(loading){
+        try {
+          const resp = await addUser(this.userForm)
+          loading.close()
+          if(resp.status === 1){
+              this.userInfoDialog = false
+              this.handleQuery()
+              this.$alertSuccess(resp.msg)
+          }else{
+            this.$alertError(resp.msg)
+          }
+        } catch (error) {
+          loading.close()
+          console.error('添加用户接口异常：',error)
+          this.$alertWarning('添加用户接口异常！请联系平台管理人员')
+        }
+      },
+      //编辑用户
+      async editUser(loading){
+        try {
+          const resp = await updateUser(this.userForm)
+          loading.close()
+          if(resp.status === 1){
+              this.userInfoDialog = false
+              this.handleQuery()
+              this.$alertSuccess(resp.msg)
+          }else{
+            this.$alertError(resp.msg)
+          }
+        } catch (error) {
+          loading.close()
+          console.error('编辑用户接口异常：',error)
+          this.$alertWarning('编辑用户接口异常！请联系平台管理人员')
+        }
+      },
       //添加/编辑 用户信息
       submitUserForm(){
        this.$refs['user-form'].validate((valid) => {
           if (valid) {
-            console.log(valid)
+             this.$confirm(`确认提交吗？`).then(_ => {
+                const loading = this.$loading({
+                  text: '处理中，请稍等'
+                })
+                if(this.isUpdateOper){
+                  this.editUser(loading)
+                }else{
+                  this.addUser(loading)
+                }
+            }).catch(_ => {})
           } 
         })
       },
-      //重置表单
-      resetForm(formName){
-        this.$refs[formName].resetFields()
+      handleEditUser(params){
+        this.userForm.Id = params.Id
+        this.userForm.userName = params.UserName
+
+        this.isUpdateOper = true
+        this.userInfoDialog = true
+        this.userDialogTitle = '编辑用户'
       },
       handleDeleteUser(params){
         this.$confirm(`确认删除该用户吗？`).then(_ => {
@@ -216,7 +268,9 @@
         }).catch(_ => {})
       },
       handleAddUser(){
+        this.isUpdateOper = false
         this.userInfoDialog = true
+        this.userForm = {}
         this.userDialogTitle = '添加用户'
       },
       handleQuery(current = 1) {

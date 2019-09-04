@@ -2,6 +2,7 @@ const User = () =>
     import ( /* webpackChunkName: "user" */ '~/views/sys-manage/user/index')
 const Role = () =>
     import ( /* webpackChunkName: "role" */ '~/views/sys-manage/role/index')
+const Permissions = () => import( /* webpackChunName: "permissions" */ '~/views/sys-manage/permissions/index')
 
 const config = [{
     path: '/sysmanage',
@@ -25,6 +26,14 @@ const config = [{
         component: Role,
         meta: {
             title: '角色管理',
+            icon: 'accessory'
+        }
+    },{
+        path: 'permissions',
+        name: 'Permissions',
+        component: Permissions,
+        meta:{
+            title: '权限管理',
             icon: 'accessory'
         }
     }]

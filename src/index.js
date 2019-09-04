@@ -12,7 +12,7 @@ import '~/permission.js'
 import IconSvg from '~/components/icon-svg'
 import Pagination from '~/components/pagination'
 
-import alerts from '~/components/mixins/alerts.js'
+import mixin from '~/components/mixins/mixin.js'
 
 import '../mock/index'
 import vueXlsxTable from 'vue-xlsx-table'
@@ -27,7 +27,7 @@ Vue.component('Pagination', Pagination)
 Vue.use(Element)
 Vue.config.productionTip = false
 
-Vue.mixin(alerts)
+Vue.mixin(mixin)
 
 new Vue({
     el: '#app',

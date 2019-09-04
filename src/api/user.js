@@ -49,16 +49,6 @@ export function updateUserStatus(data){
     })
 }
 /**
- * 获取用户信息
- */
-export function getUserInfo(params){
-    return request({
-        url:'/SysUser/FindById',
-        method:'get',
-        params
-    })
-}
-/**
  * 删除用户
  */
 export function deleteUser(data){
@@ -84,7 +74,7 @@ export function addUser(data){
 export function updateUser(data){
     return request({
         url:'/SysUser/Update',
-        method:'put',
+        method:'post',
         data
     })
 }
