@@ -27,13 +27,15 @@
           <el-image style="width:25;heigh:25px;" fit="cover" :src="scope.row.Photo" v-if="scope.row.Photo"></el-image>
         </template>
       </el-table-column>
+      <el-table-column label="角色" prop="Roles">
+      </el-table-column>
       <el-table-column label="状态" sortable prop="Status">
         <template slot-scope="scope">
           <el-tag :type="scope.row.Status ? 'success':'danger'">{{ scope.row.Status?'启用':'禁用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
-        <template slot-scope="scope">
+        <template slot-scope="scope">          
           <el-button type="warning" size="mini" @click="handleEditUser(scope.row)">编辑</el-button>
           <el-button
             type="primary"
@@ -51,6 +53,7 @@
       'currentPageChanged':handleCurrentPageChanged,
       'pageSizeChanged':handlePageSizeChanged}">
     </pagination>
+    <!-- 新增/编辑用户 -->
     <el-dialog 
       :title="userDialogTitle"
       width="30%"
@@ -69,6 +72,15 @@
         <el-form-item label="新密码" prop="userPwd" v-if="isUpdatePwd">
           <el-input type="text" placeholder="请输入新密码" v-model="userForm.Pwd" clearable></el-input>
         </el-form-item>
+        <el-form-item label="设置角色">
+          <el-select v-model="userForm.RoleIds" multiple placeholder="请选择角色">
+            <el-option
+              v-for="item in roles"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer">
           <el-button type="primary" @click="submitUserForm">提交</el-button>
@@ -82,6 +94,9 @@
 </style>
 <script>
   import '~/assets/icons/svg/file.svg'
+  import { 
+    getRoles
+  } from '~/api/role'
   import {
     getUserList,
     updateUserStatus,
@@ -99,6 +114,7 @@
   export default {
     data() {
       return {
+        roles:[],
         isUpdateOper:false,
         isUpdatePwd:false,
         userDialogTitle:'',
@@ -134,8 +150,19 @@
     },
     created() {
       this.getUserList()
+      this.getRoles()
     },
     methods: {
+      async getRoles(){
+        try {
+          const resp = await getRoles()
+          if(resp.status === 1){
+            this.roles = resp.data
+          }
+        } catch (error) {
+          console.error('获取角色数据异常：' + error)
+        }
+      },
       //根据条件获取用户数据集合
       async getUserList() {
         this.loading = true
@@ -144,7 +171,12 @@
           delayTime().then(_ => {
             this.loading = false
             if (resp.status === 1) {
-              this.tableData = resp.data.rows
+              const list = resp.data.rows
+              list.forEach(item => {
+                console.log(item)
+                item.Roles = item.Roles.length > 0? item.Roles.join('、') : ''
+              })
+              this.tableData = list
               this.total = resp.data.total
             } else {
               this.$alertError(resp.msg)
@@ -152,7 +184,7 @@
           })
         } catch (error) {
           this.loading = false
-          console.error('请求异常：' + error)
+          console.error('请求用户数据列表异常：' + error)
           this.$alertWarning('“用户数据列表数据”接口异常！请联系平台管理人员')
         }
       },
@@ -254,10 +286,13 @@
           } 
         })
       },
+      handleSetRoles(){
+        this.setRolesDialog = true
+      },
       handleEditUser(params){
         this.userForm.Id = params.Id
         this.userForm.userName = params.UserName
-
+        this.userForm.RoleIds = params.RoleIds
         this.isUpdateOper = true
         this.userInfoDialog = true
         this.userDialogTitle = '编辑用户'

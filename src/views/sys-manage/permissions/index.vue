@@ -8,7 +8,6 @@
       <div class="block">
         <el-tree
           :data="permissions" 
-          show-checkbox 
           node-key="id" 
           default-expand-all
           :filter-node-method="filterNode"
@@ -17,7 +16,7 @@
           <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="text" size="mini" @click="() => append(data)">
+              <el-button type="text" size="mini" @click="() => append(data)" v-if="data.type != 2">
                 添加
               </el-button>
               <el-button type="text" size="mini" @click="() => update(node, data)"  v-if="node.label != '顶级'">
@@ -34,8 +33,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="dialogVisible"
-      width="30%"
-    >
+      width="30%">
       <el-form
         ref="permission-form"
         :model="form"

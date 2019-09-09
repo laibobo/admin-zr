@@ -40,3 +40,33 @@ export function updateRole(data){
         data
     })
 }
+/** 
+ * 设置角色权限
+*/
+export function setRolePermissions(data){
+    return request({
+        url: '/SysRole/SetRolePermissions',
+        method: 'post',
+        data
+    })
+}
+/**
+ *  获取角色权限
+ */
+export function getRolePermissions(data){
+    return request({
+        url: '/SysRole/GetRolePermissions',
+        method: 'post',
+        data
+    })
+}
+/**
+ * 获取全部角色集合
+ */
+export function getRoles(data){
+    return request({
+        url:'/SysRole/GetRoleList',
+        method:'get',
+        data
+    })
+}

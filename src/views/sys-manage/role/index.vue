@@ -17,8 +17,9 @@
       </el-table-column>
       <el-table-column label="角色名称" sortable prop="Name" />      
       <el-table-column label="编码" sortable prop="Code" />
-      <el-table-column fixed="right" label="操作" width="220">
+      <el-table-column fixed="right" label="操作" width="250">
         <template slot-scope="scope">
+          <el-button type="success" size="mini" @click="handleSetPermissions(scope.row)">设置权限</el-button>
           <el-button type="warning" size="mini" @click="handleEditRole(scope.row)">编辑</el-button>          
           <el-button type="danger" size="mini" @click="handleDeleteRole(scope.row)">删除</el-button>
         </template>
@@ -31,6 +32,27 @@
       'currentPageChanged':handleCurrentPageChanged,
       'pageSizeChanged':handlePageSizeChanged}">
     </pagination>
+    <el-dialog 
+      title="设置权限"
+      width="30%"
+      :visible.sync="permissionRoleDialog">
+      <el-tree
+          :data="permissions" 
+          node-key="id" 
+          default-expand-all
+          show-checkbox
+          :filter-node-method="filterNode"
+          :expand-on-click-node="false" 
+          ref="rolepermission-tree">
+          <span class="custom-tree-node" slot-scope="{ node, data }">
+            <span>{{ node.label }}</span>
+          </span>
+        </el-tree>
+        <span slot="footer">
+          <el-button type="primary" @click="submitPermissionsForm">提交</el-button>
+          <el-button @click="permissionRoleDialog=false">取消</el-button>
+      </span>
+    </el-dialog>
     <el-dialog 
       :title="roleDialogTitle"
       width="30%"
@@ -60,10 +82,15 @@
 <script>
   import '~/assets/icons/svg/file.svg'
   import {
+    getPermissionList
+  } from '~/api/permission'
+  import {
     getRoleList,
     deleteRole,
     addRole,
-    updateRole
+    updateRole,
+    setRolePermissions,
+    getRolePermissions
   } from '~/api/role'
   import {
     getPageBtns
@@ -75,6 +102,16 @@
   export default {
     data() {
       return {
+        permissionForm:{
+          RoleId:null,
+          PermissionId:[]
+        },
+        permissions:[{
+          id: 0,
+          label: '顶级',
+          children: []
+        }],
+        permissionRoleDialog:false,
         isUpdateOper:false,
         roleDialogTitle:'',
         roleFormRules:{
@@ -107,7 +144,8 @@
       }
     },
     created() {
-      this.getRoleList()
+      this.getPermissionList()
+      this.handleQuery()
     },
     methods: {
       //根据条件获取角色数据集合
@@ -187,6 +225,63 @@
           this.$alertWarning('编辑角色接口异常！请联系平台管理人员')
         }
       },
+      //获取全部权限
+      async getPermissionList(){
+        try {
+          const resp = await getPermissionList()
+          if(resp.status === 1){
+            this.permissions[0].children = resp.data
+          }else{
+            this.$alertError('获取权限数据失败！'+ resp.msg)
+          }  
+        } catch (error) {
+          console.error('获取权限数据接口异常：',error)
+          this.$alertWarning('获取权限数据接口异常！请联系平台管理人员')
+        }
+      },
+      //设置角色权限
+      async setRolePermissions(){
+        const loading = this.$loading({
+          text: '处理中，请稍等'
+        })
+        try {
+          const resp = await setRolePermissions(this.permissionForm)
+          loading.close()
+          if(resp.status === 1){
+            this.$alertSuccess(resp.msg)
+            this.permissionRoleDialog = false
+          }else{
+            this.$alertError(resp.msg)
+          } 
+        } catch (error) {
+          console.error('设置角色权限接口异常：',error)
+          this.$alertWarning('设置角色权限接口异常！请联系平台管理人员')
+        }
+      },
+      //获取角色权限
+      async getRolePermissions(){
+        try {
+          const resp = await getRolePermissions({
+            Id:this.permissionForm.RoleId
+          })
+          if(resp.status === 1){
+            this.$refs['rolepermission-tree'].setCheckedKeys(resp.data)
+          }else{
+            this.$alertError('获取角色权限数据失败！'+ resp.msg)
+          }  
+        } catch (error) {
+          console.error('获取角色权限数据接口异常：',error)
+          this.$alertWarning('获取角色权限数据接口异常！请联系平台管理人员')
+        }
+      },
+      submitPermissionsForm(data){
+        this.$confirm(`确认提交吗？`).then(_ => {
+          const data = this.$refs['rolepermission-tree'].getCheckedNodes(false,false)
+          console.log(data)
+          this.permissionForm.PermissionId = data.map(item => item.id)  
+          this.setRolePermissions()
+        }).catch(_ => {})
+      }, 
       //添加/编辑 角色信息
       submitRoleForm(){
        this.$refs['role-form'].validate((valid) => {
@@ -203,6 +298,11 @@
             }).catch(_ => {})
           } 
         })
+      },
+      handleSetPermissions(data){
+        this.permissionRoleDialog = true
+        this.permissionForm.RoleId = data.Id
+        this.getRolePermissions()
       },
       handleEditRole(params){
         this.roleForm.Id = params.Id
@@ -234,6 +334,10 @@
       handlePageSizeChanged(ps) {
         this.size = ps
         this.handleQuery()
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
       }
     }
   }
