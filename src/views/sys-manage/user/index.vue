@@ -14,7 +14,7 @@
         </el-col>
         <el-col class="btn-group">
           <el-button type="primary" @click="handleQuery">查询</el-button>
-          <el-button plain type="primary" v-show="getBtnAuth.indexOf('add') > -1" @click="handleAddUser">新增</el-button>
+          <el-button plain type="primary" @click="handleAddUser">新增</el-button>
         </el-col>
       </el-row>
     </section>
@@ -40,9 +40,10 @@
           <el-button
             type="primary"
             size="mini"
-            v-show="getBtnAuth.indexOf('look') > -1" 
+            
             @click="handleUpdateUserStatus(scope.row)">{{ scope.row.Status?'禁用':'启用' }}</el-button>
           <el-button type="danger" size="mini" @click="handleDeleteUser(scope.row)">删除</el-button>
+          <!-- v-show="getBtnAuth.indexOf('look') > -1"  -->
         </template>
       </el-table-column>
     </el-table>
@@ -59,6 +60,7 @@
       width="30%"
       :visible.sync="userInfoDialog">
       <el-form
+        status-icon
         :model="userForm"
         :rules="userFormRules"
         ref="user-form"

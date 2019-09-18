@@ -22,9 +22,9 @@ router.beforeEach(async(to, from, next) => {
             const hasPermissionIdents = store.getters.permissionIdents && store.getters.permissionIdents.length > 0
             if (!hasPermissionIdents) {
                 try {
-                    const { permissionIdents } = await store.dispatch('getInfo')
-
-                    const accessRoutes = await store.dispatch('generateRoutes', permissionIdents)
+                    const { permissionIdents} = await store.dispatch('getInfo')
+                    
+                    const accessRoutes = await store.dispatch('generateRoutes', {permissionIdents})
                     router.addRoutes(accessRoutes)
                     next({...to, replace: true })
                 } catch (error) {

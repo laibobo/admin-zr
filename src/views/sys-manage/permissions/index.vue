@@ -252,7 +252,6 @@
       },
       update(node,data){
         const parent = node.parent
-        console.log('parent:',parent)
         this.dialogTitle = '编辑'
         this.dialogVisible = true
         this.isUpdateOper = true

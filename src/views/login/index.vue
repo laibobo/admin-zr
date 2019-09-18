@@ -14,6 +14,7 @@
             v-model.trim="loginForm.username"
             placeholder="请输入用户名"
             autocomplete="off"
+            @keyup.enter.native="submitForm"
           />
         </el-form-item>
         <el-form-item
@@ -24,13 +25,15 @@
             type="password"
             placeholder="请输入密码"
             autocomplete="off"
+            @keyup.enter.native="submitForm"
           />
         </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
-            @click="submitForm('login-form')"
-          >登录</el-button>
+            :loading="isLoginLoading"
+            @click="submitForm"
+          > {{ isLoginLoading? '登录中':'登录' }}</el-button>
         </el-form-item>
       </el-form>
     </article>
@@ -43,13 +46,15 @@
     width: 100%;
     position: absolute;
     .login-panel{
+      background: #fff;
       width: 400px;
+      margin-left: -200px;
       height: 300px;
       position: fixed;
-      background: #fff;
-      right: 300px;
+      top: 50%;
+      left: 50%;
+      margin-top: -200px;
       padding: 20px;
-      bottom: 220px;
       box-sizing: border-box;
       box-shadow: 2px 1px 5px #565366;
       border-radius: 5px;
@@ -61,6 +66,7 @@ import { login } from '~/api/user'
 export default {
   data() {
     return {
+      isLoginLoading:false,
       loginForm: {
         username: '',
         password: ''
@@ -80,20 +86,26 @@ export default {
     next()
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      if(this.isLoginLoading) return
+
+      console.log(this.isLoginLoading,1111111)
+      this.$refs['login-form'].validate((valid) => {
         if (valid) {
-          this.$store.dispatch('userLogin',this.loginForm).then(() => {
+          this.isLoginLoading = true
+          this.$store.dispatch('userLogin',this.loginForm).then(() => {            
+            this.isLoginLoading = false
             this.$notify({
               title: '登录成功',
               message: '正在跳转页面...',
               type: 'success',
               duration: 1500,
               onClose:()=>{
-                this.$router.push({ path: '/sysmanage/user' })
+                this.$router.push({ path: '/sysmanage/role' })
               }
             })
           }).catch(err => {
+            this.isLoginLoading = false
             this.$notify({
               title:'登录失败',
               message: err,

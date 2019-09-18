@@ -4,19 +4,19 @@ import request from '~/utils/request'
  */
 export function login(data) {
     return request({
-        url: '/user/login',
+        url: '/SysUser/Login',
         method: 'post',
         data
     })
 }
 /**
- * 获取用户权限相关信息
+ * 获取用户相关信息
  */
-export function getInfo(token) {
+export function getInfo(data) {
     return request({
-        url: '/user/info',
-        method: 'get',
-        params: { token }
+        url: '/SysUser/GetUserInfo',
+        method: 'post',
+        data
     })
 }
 /**

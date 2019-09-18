@@ -8,7 +8,7 @@
         </el-col>
         <el-col class="btn-group">
           <el-button type="primary" @click="handleQuery">查询</el-button>
-          <el-button plain type="primary" v-show="getBtnAuth.indexOf('add') > -1" @click="handleAddRole">新增</el-button>
+          <el-button plain type="primary" @click="handleAddRole">新增</el-button>
         </el-col>
       </el-row>
     </section>
@@ -44,7 +44,7 @@
           :filter-node-method="filterNode"
           :expand-on-click-node="false" 
           ref="rolepermission-tree">
-          <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span class="custom-tree-node" slot-scope="{ node }">
             <span>{{ node.label }}</span>
           </span>
         </el-tree>
@@ -58,6 +58,7 @@
       width="30%"
       :visible.sync="roleInfoDialog">
       <el-form
+        status-icon
         :model="roleForm"
         :rules="roleFormRules"
         ref="role-form"
@@ -178,8 +179,8 @@
           const resp = await deleteRole({id})
           loading.close()
           if (resp.status === 1) {
-            this.$alertSuccess(resp.msg)
             this.handleQuery()
+            this.$alertSuccess(resp.msg)
           } else {
             this.$alertError(resp.msg)
           }
@@ -195,8 +196,8 @@
           const resp = await addRole(this.roleForm)
           loading.close()
           if(resp.status === 1){
-              this.roleInfoDialog = false
               this.handleQuery()
+              this.roleInfoDialog = false
               this.$alertSuccess(resp.msg)
           }else{
             this.$alertError(resp.msg)
@@ -213,8 +214,8 @@
           const resp = await updateRole(this.roleForm)
           loading.close()
           if(resp.status === 1){
-              this.roleInfoDialog = false
               this.handleQuery()
+              this.roleInfoDialog = false
               this.$alertSuccess(resp.msg)
           }else{
             this.$alertError(resp.msg)
@@ -248,8 +249,8 @@
           const resp = await setRolePermissions(this.permissionForm)
           loading.close()
           if(resp.status === 1){
-            this.$alertSuccess(resp.msg)
             this.permissionRoleDialog = false
+            this.$alertSuccess(resp.msg)
           }else{
             this.$alertError(resp.msg)
           } 
@@ -276,8 +277,8 @@
       },
       submitPermissionsForm(data){
         this.$confirm(`确认提交吗？`).then(_ => {
-          const data = this.$refs['rolepermission-tree'].getCheckedNodes(false,false)
-          console.log(data)
+          const data = this.$refs['rolepermission-tree'].getCheckedNodes(true,false)
+                    
           this.permissionForm.PermissionId = data.map(item => item.id)  
           this.setRolePermissions()
         }).catch(_ => {})

@@ -27,10 +27,15 @@ const actions = {
     userLogin({ commit }, userInfo) {
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
-            login({ username: username, password: password }).then(response => {
-                commit('SET_TOKEN', response.token)
-                setToken(response.token)
-                resolve()
+            login({ userName: username, userPwd: password }).then(response => {
+                if(response.status === 1){
+                    const token = response.data.token
+                    commit('SET_TOKEN', token)
+                    setToken(token)
+                    resolve()
+                }else{
+                    reject(response.msg)
+                }                
             }).catch(error => {
                 reject(error)
             })
@@ -38,16 +43,13 @@ const actions = {
     },
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
-            getInfo(state.token).then(response => {
-                if (!response) {
+            getInfo({token:state.token }).then(response => {
+                if (response.status !== 1) {
                     reject('验证失败，请重新登录')
                 }
                 const { data } = response
                 const { roles, name, permissionIdents } = data
-
-                if (!roles || roles.length <= 0) {
-                    reject('获取用户信息: 角色必须是非空数组')
-                }
+                console.log('permissionIdents:',permissionIdents)
 
                 commit('SET_ROLES', roles)
                 commit('SET_NAME', name)
