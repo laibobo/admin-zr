@@ -12,7 +12,7 @@
             v-for="route in permission_routes"
             :key="route.path"
             :item="route"
-            :is-nest="false"
+            :is-nest="true"
             :base-path="route.path"
           />
         </el-menu>
@@ -166,6 +166,7 @@ export default {
   },
   created(){
     this.userName = this.$store.getters.name
+    console.log('permission_routes:',this.permission_routes)
   },
   computed: {
     ...mapGetters([

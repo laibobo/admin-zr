@@ -7,40 +7,61 @@ import Layout from '../views/layout/index'
 import sysManageRouter from '../router/modules/sys-manage'
 
 export const constantRoutes = [{
-    path: '/login',
-    name: 'Login',
+  path: '/',
+  component: Layout,
+  redirect: '/home',
+  children: [{
+    path: 'home',
     component: () =>
-        import ( /* webpackChunkName: "login" */ '~/views/login/index'),
+      import( /* webpackChunkName: "home" */ '~/views/home/index'),
+    name: 'home',
     meta: {
-        title: '系统登录'
-    },
-    hidden: true
+      title: 'home',
+      icon: 'home'
+    }
+  }]
 }, {
-    path: '/404',
-    component: () =>
-        import ( /* webpackChunkName: "error 404" */ '~/views/error-page/404'),
-    hidden: true
+  path: '/login',
+  name: 'Login',
+  component: () =>
+    import( /* webpackChunkName: "login" */ '~/views/login/index'),
+  meta: {
+    title: '系统登录'
+  },
+  hidden: true
 }, {
-    path: '/401',
-    component: () =>
-        import ( /* webpackChunkName: "error 401" */ '~/views/error-page/401'),
-    hidden: true
+  path: '/404',
+  component: () =>
+    import( /* webpackChunkName: "error 404" */ '~/views/error-page/404'),
+  hidden: true
+}, {
+  path: '/401',
+  component: () =>
+    import( /* webpackChunkName: "error 401" */ '~/views/error-page/401'),
+  hidden: true
 }]
 sysManageRouter.map((item) => {
-    item.component = Layout
+  console.log(item)
+  item.component = Layout
 })
 export const asyncRoutes = [
-    sysManageRouter,
-    { path: '*', redirect: '/404', hidden: true }
+  sysManageRouter,
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 const createRouter = () => new Router({
-    scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: constantRoutes
 })
 const router = createRouter()
 
 export function resetRouter() {
-    const newRouter = createRouter()
-    router.matcher = newRouter.matcher
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher
 }
 export default router
