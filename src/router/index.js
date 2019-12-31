@@ -5,22 +5,9 @@ Vue.use(Router)
 
 import Layout from '../views/layout/index'
 import sysManageRouter from '../router/modules/sys-manage'
+import sysChart from '../router/modules/sys-chart'
 
 export const constantRoutes = [{
-  path: '/',
-  component: Layout,
-  redirect: '/home',
-  children: [{
-    path: 'home',
-    component: () =>
-      import( /* webpackChunkName: "home" */ '~/views/home/index'),
-    name: 'home',
-    meta: {
-      title: 'home',
-      icon: 'home'
-    }
-  }]
-}, {
   path: '/login',
   name: 'Login',
   component: () =>
@@ -40,12 +27,16 @@ export const constantRoutes = [{
     import( /* webpackChunkName: "error 401" */ '~/views/error-page/401'),
   hidden: true
 }]
-sysManageRouter.map((item) => {
-  console.log(item)
+const asyncRoute = [
+  ...sysManageRouter,
+  ...sysChart
+]
+asyncRoute.map((item) => {
+  console.log('map',item)
   item.component = Layout
 })
 export const asyncRoutes = [
-  sysManageRouter,
+  ...asyncRoute,
   {
     path: '*',
     redirect: '/404',
